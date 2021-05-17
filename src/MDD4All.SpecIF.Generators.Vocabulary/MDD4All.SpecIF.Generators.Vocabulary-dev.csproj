@@ -4,6 +4,8 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <StartupObject>MDD4All.SpecIF.Generators.Vocabulary.Program</StartupObject>
+        <AssemblyName>MDD4All.SpecIF.Generators.Vocabulary</AssemblyName>
+        <RootNamespace>MDD4All.SpecIF.Generators.Vocabulary</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,8 +13,8 @@
     </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\MDD4All.SpecIF.DataModels.Manipulation\src\MDD4All.SpecIF.DataModels.Manipulation\MDD4All.SpecIF.DataModels.Manipulation.csproj" />
-    <ProjectReference Include="$(SolutionDir)\MDD4All.SpecIF.DataProvider.File\src\MDD4All.SpecIF.DataProvider.File\MDD4All.SpecIF.DataProvider.File.csproj" />
+    <ProjectReference Include="$(SolutionDir)\MDD4All.SpecIF.DataModels.Manipulation\src\MDD4All.SpecIF.DataModels.Manipulation\MDD4All.SpecIF.DataModels.Manipulation-dev.csproj" />
+    <ProjectReference Include="$(SolutionDir)\MDD4All.SpecIF.DataProvider.File\src\MDD4All.SpecIF.DataProvider.File\MDD4All.SpecIF.DataProvider.File-dev.csproj" />
   </ItemGroup>
 
 </Project>

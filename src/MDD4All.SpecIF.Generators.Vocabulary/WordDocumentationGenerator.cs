@@ -285,9 +285,9 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             {
                 result.Content.Add(dataType.Description[0].Text);
                 
-                if (dataType.Values != null)
+                if (dataType.Enumeration != null)
                 {
-                    foreach (EnumerationValue value in dataType.Values)
+                    foreach (EnumerationValue value in dataType.Enumeration)
                     {
                         result.Content.Add("<p>" + value.Value[0].Text + " [" + value.ID + "]</p>");
                     }

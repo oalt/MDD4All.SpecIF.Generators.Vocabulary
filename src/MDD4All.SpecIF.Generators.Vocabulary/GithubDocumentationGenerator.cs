@@ -8,7 +8,7 @@ using MDD4All.SpecIF.DataProvider.Contracts;
 
 namespace MDD4All.SpecIF.Generators.Vocabulary
 {
-    public class GithibDocumentationGenerator
+    public class GithubDocumentationGenerator
     {
 
         private Dictionary<string, SpecIF.DataModels.SpecIF> _domainClasses = new Dictionary<string, SpecIF.DataModels.SpecIF>();
@@ -149,10 +149,10 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             {
                 result = "<p>" + dataType.Description[0].Text + "</p>";
 
-                if (dataType.Values != null)
+                if (dataType.Enumeration != null)
                 {
                     result += "<ul>";
-                    foreach (EnumerationValue value in dataType.Values)
+                    foreach (EnumerationValue value in dataType.Enumeration)
                     {
                         result += "<li>" + value.Value[0].Text + " [" + value.ID + "]</li>";
                     }
