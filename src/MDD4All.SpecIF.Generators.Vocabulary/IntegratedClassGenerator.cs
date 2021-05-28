@@ -32,7 +32,12 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
                 foreach (DirectoryInfo domainDirectoryInfo in classDefinitionRootDirectory.GetDirectories())
                 {
-                    InitializeClassDefinitions(domainDirectoryInfo);
+                    if (domainDirectoryInfo.Name.StartsWith("01") ||
+                        domainDirectoryInfo.Name.StartsWith("02") ||
+                        domainDirectoryInfo.Name.StartsWith("03"))
+                    {
+                        InitializeClassDefinitions(domainDirectoryInfo);
+                    }
                 }
 
             }

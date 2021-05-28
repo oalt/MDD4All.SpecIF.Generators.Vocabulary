@@ -17,7 +17,7 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
         private static void GenerateDocumentation()
         {
-            string[] classDefinitionRoots = { @"d:\work\github\SpecIF\classDefinitions\1.1" };
+            string[] classDefinitionRoots = { @"d:\work\github\SpecIF\classDefinitions" };
 
             //VocabularyGenerator vocabularyGenerator = new VocabularyGenerator();
 
@@ -42,11 +42,11 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
         private static void GenerateClassDefinitionSpecIF()
         {
-            string[] classDefinitionRoots = { @"d:\work\github\SpecIF\classDefinitions\1.1" };
+            string[] classDefinitionRoots = { @"d:\work\github\SpecIF\classDefinitions" };
 
             IntegratedClassGenerator integratedClassGenerator = new IntegratedClassGenerator();
 
-            string outputPath = @"D:\work\github\SpecIF\classDefinitions\SpecIF-Classes-1_1.specif";
+            string outputPath = @"d:\work\github\SpecIF\classDefinitions\_Packages\SpecIF-Classes-1_1.specif";
 
             integratedClassGenerator.GenerateVocabulary(classDefinitionRoots, outputPath);
         }

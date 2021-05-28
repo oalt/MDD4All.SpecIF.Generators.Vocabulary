@@ -281,17 +281,15 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
         {
             TableCell result = new TableCell();
 
-            if (dataType.Type == "xs:enumeration")
+            if (dataType.Enumeration != null && dataType.Enumeration.Count > 0)
             {
                 result.Content.Add(dataType.Description[0].Text);
-                
-                if (dataType.Enumeration != null)
+
+                foreach (EnumerationValue value in dataType.Enumeration)
                 {
-                    foreach (EnumerationValue value in dataType.Enumeration)
-                    {
-                        result.Content.Add("<p>" + value.Value[0].Text + " [" + value.ID + "]</p>");
-                    }
+                    result.Content.Add("<p>" + value.Value[0].Text + " [" + value.ID + "]</p>");
                 }
+
             }
             else
             {

@@ -145,19 +145,17 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
         {
             string result = "";
 
-            if (dataType.Type == "xs:enumeration")
+            if (dataType.Enumeration != null && dataType.Enumeration.Count > 0)
             {
                 result = "<p>" + dataType.Description[0].Text + "</p>";
 
-                if (dataType.Enumeration != null)
+                result += "<ul>";
+                foreach (EnumerationValue value in dataType.Enumeration)
                 {
-                    result += "<ul>";
-                    foreach (EnumerationValue value in dataType.Enumeration)
-                    {
-                        result += "<li>" + value.Value[0].Text + " [" + value.ID + "]</li>";
-                    }
-                    result += "</ul>";
+                    result += "<li>" + value.Value[0].Text + " [" + value.ID + "]</li>";
                 }
+                result += "</ul>";
+
             }
             else
             {
