@@ -9,50 +9,15 @@ using MDD4All.SpecIF.Generators.Vocabulary.DataModels;
 
 namespace MDD4All.SpecIF.Generators.Vocabulary
 {
-    public class WordDocumentationGenerator
+    public class WordDocumentationGenerator : SpecIfGeneratorBase
     {
-
-        private Dictionary<string, SpecIF.DataModels.SpecIF> _domainClasses = new Dictionary<string, SpecIF.DataModels.SpecIF>();
-
         private const string CRLF = "\r\n";
 
-        private SpecIF.DataModels.SpecIF _metaDataSpecIF = new SpecIF.DataModels.SpecIF();
-
-        private ISpecIfMetadataReader _specIfMetadataReader;
-
-        public string GenerateVocabularyDocumentation(string[] classDefinitionRoot)
+        public WordDocumentationGenerator(List<DirectoryInfo> directories) : base(directories)
         {
-            string result = "";
-
-            // read all datatype and class definition
-            foreach (string path in classDefinitionRoot)
-            {
-                DirectoryInfo classDefinitionRootDirectory = new DirectoryInfo(path);
-
-                foreach (DirectoryInfo domainDirectoryInfo in classDefinitionRootDirectory.GetDirectories())
-                {
-                    if (domainDirectoryInfo.Name.StartsWith("01") ||
-                        domainDirectoryInfo.Name.StartsWith("02") ||
-                        domainDirectoryInfo.Name.StartsWith("03"))
-                    {
-
-                        InitializeClassDefinitions(domainDirectoryInfo);
-                    }
-                }
-
-            }
-
-            _specIfMetadataReader = new SpecIfFileMetadataReader(_metaDataSpecIF);
-
-            foreach (KeyValuePair<string, SpecIF.DataModels.SpecIF> domain in _domainClasses)
-            {
-                result += GenerateDomainDocumentation(domain.Key, domain.Value);
-            }
-
-            return result;
         }
 
-        private string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
+        protected override string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
         {
             string result = "";
 
@@ -157,13 +122,20 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
                 foreach (PropertyClass propertyClass in domainClasses.PropertyClasses)
                 {
+                    string description = "";
+
+                    if(propertyClass.Description.Count > 0)
+                    {
+                        description = propertyClass.Description[0].Text;
+                    }
+
                     List<TableCell> contentRow = new List<TableCell>()
                     {
                         new TableCell(propertyClass.Title),
                         new TableCell(propertyClass.ID),
                         new TableCell(propertyClass.Revision),
                         new TableCell(propertyClass.GetDataTypeTitle(_specIfMetadataReader)),
-                        new TableCell(propertyClass.Description[0].Text)
+                        new TableCell(description)
                     };
 
                     table.TableCells.Add(contentRow);
@@ -332,38 +304,7 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             return result;
         }
 
-        private void InitializeClassDefinitions(DirectoryInfo domainDirectory)
-        {
-            string domainName = domainDirectory.Name;
-
-            FileInfo[] specIfFiles = domainDirectory.GetFiles("*.specif");
-
-            SpecIF.DataModels.SpecIF domainSpecIF = new SpecIF.DataModels.SpecIF();
-
-            int fileConuter = 0;
-
-            foreach (FileInfo fileInfo in specIfFiles)
-            {
-                fileConuter++;
-
-                SpecIF.DataModels.SpecIF specIF = SpecIfFileReaderWriter.ReadDataFromSpecIfFile(fileInfo.FullName);
-
-                domainSpecIF.DataTypes.AddRange(specIF.DataTypes);
-                domainSpecIF.PropertyClasses.AddRange(specIF.PropertyClasses);
-                domainSpecIF.ResourceClasses.AddRange(specIF.ResourceClasses);
-                domainSpecIF.StatementClasses.AddRange(specIF.StatementClasses);
-
-                _metaDataSpecIF.DataTypes.AddRange(specIF.DataTypes);
-                _metaDataSpecIF.PropertyClasses.AddRange(specIF.PropertyClasses);
-                _metaDataSpecIF.ResourceClasses.AddRange(specIF.ResourceClasses);
-                _metaDataSpecIF.StatementClasses.AddRange(specIF.StatementClasses);
-            }
-
-            _domainClasses.Add(domainName, domainSpecIF);
-
-
-
-        }
+        
 
 
     }

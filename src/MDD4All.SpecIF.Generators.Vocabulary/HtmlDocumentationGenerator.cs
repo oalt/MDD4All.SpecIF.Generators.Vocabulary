@@ -4,15 +4,17 @@ using MDD4All.SpecIF.DataProvider.Contracts;
 using MDD4All.SpecIF.DataProvider.File;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MDD4All.SpecIF.Generators.Vocabulary
 {
-    public class HtmlDocumentationGenerator
+    public class HtmlDocumentationGenerator : SpecIfGeneratorBase
     {
-        private ISpecIfMetadataReader _specIfMetadataReader;
+        public HtmlDocumentationGenerator(List<DirectoryInfo> directories) : base(directories)
+        {
+        }
 
-
-        public string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
+        protected override string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
         {
             string result = "<html>" + Environment.NewLine;
 

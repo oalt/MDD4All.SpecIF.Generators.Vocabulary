@@ -14,34 +14,31 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
         private SpecIF.DataModels.SpecIF _metaDataSpecIF = new SpecIF.DataModels.SpecIF();
 
-        public void GenerateVocabulary(string[] classDefinitionRoot, string outputPath)
+        public IntegratedClassGenerator(List<DirectoryInfo> directoryInfos, string title)
         {
             _metaDataSpecIF = new SpecIF.DataModels.SpecIF()
             {
+                ID = "_d89d4735_be09_40c7_ac57_0d93956510b8",
                 CreatedAt = DateTime.Now,
                 Generator = "SpecIFicator Vocabulary Generator",
                 Title = new List<MultilanguageText> {
-                    new MultilanguageText("SpecIF classes for SpecIF 1.1")
+                    new MultilanguageText(title)
                 }
             };
 
-            // read all datatype and class definition
-            foreach (string path in classDefinitionRoot)
+            foreach (DirectoryInfo directoryInfo in directoryInfos)
             {
-                DirectoryInfo classDefinitionRootDirectory = new DirectoryInfo(path);
-
-                foreach (DirectoryInfo domainDirectoryInfo in classDefinitionRootDirectory.GetDirectories())
+                if (directoryInfo.Name != "_Packages")
                 {
-                    if (domainDirectoryInfo.Name.StartsWith("01") ||
-                        domainDirectoryInfo.Name.StartsWith("02") ||
-                        domainDirectoryInfo.Name.StartsWith("03"))
-                    {
-                        InitializeClassDefinitions(domainDirectoryInfo);
-                    }
+                    InitializeClassDefinitions(directoryInfo);
                 }
-
             }
 
+            
+        }
+
+        public void GenerateVocabulary(string outputPath)
+        {
             SpecIfFileReaderWriter.SaveSpecIfToFile(_metaDataSpecIF, outputPath);
         }
 

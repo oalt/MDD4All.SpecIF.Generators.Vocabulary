@@ -8,52 +8,22 @@ using MDD4All.SpecIF.DataProvider.Contracts;
 
 namespace MDD4All.SpecIF.Generators.Vocabulary
 {
-    public class GithubDocumentationGenerator
+    public class GithubDocumentationGenerator : SpecIfGeneratorBase
     {
-
-        private Dictionary<string, SpecIF.DataModels.SpecIF> _domainClasses = new Dictionary<string, SpecIF.DataModels.SpecIF>();
-
         private const string CRLF = "\r\n";
 
-        private SpecIF.DataModels.SpecIF _metaDataSpecIF = new SpecIF.DataModels.SpecIF();
-
-        private ISpecIfMetadataReader _specIfMetadataReader;
-
-        public string GenerateVocabularyDocumentation(string[] classDefinitionRoot)
+        public GithubDocumentationGenerator(List<DirectoryInfo> directories) : base(directories)
         {
-            string result = "";
-
-            // read all datatype and class definition
-            foreach (string path in classDefinitionRoot)
-            {
-                DirectoryInfo classDefinitionRootDirectory = new DirectoryInfo(path);
-
-                foreach (DirectoryInfo domainDirectoryInfo in classDefinitionRootDirectory.GetDirectories())
-                {
-                    if (domainDirectoryInfo.Name.StartsWith("01") ||
-                        domainDirectoryInfo.Name.StartsWith("02") ||
-                        domainDirectoryInfo.Name.StartsWith("03"))
-                    {
-
-                        InitializeClassDefinitions(domainDirectoryInfo);
-                    }
-                }
-
-            }
-
-            _specIfMetadataReader = new SpecIfFileMetadataReader(_metaDataSpecIF);
-
-            foreach (KeyValuePair<string, SpecIF.DataModels.SpecIF> domain in _domainClasses)
-            {
-                result += GenerateDomainDocumentation(domain.Key, domain.Value);
-            }
-
-            return result;
         }
 
-        private string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
+        protected override string GenerateDomainDocumentation(string key, SpecIF.DataModels.SpecIF domainClasses)
         {
             string result = "";
+
+            if(_specIfMetadataReader == null)
+            {
+                _specIfMetadataReader = new SpecIfFileMetadataReader(domainClasses);
+            }
 
             string domainName = key.Replace("_", ": ");
 
@@ -98,7 +68,7 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
                     result += "|" + propertyClass.Title + "|" + propertyClass.ID + "|" + propertyClass.Revision;
                     result += "|" + propertyClass.GetDataTypeTitle(_specIfMetadataReader);
 
-                    result += "|" + propertyClass.Description[0].Text + "|" + Environment.NewLine;
+                    result += "|" + GetPropertyClassDescription(propertyClass) + "|" + Environment.NewLine;
                 }
             }
 
@@ -147,7 +117,10 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
             if (dataType.Enumeration != null && dataType.Enumeration.Count > 0)
             {
-                result = "<p>" + dataType.Description[0].Text + "</p>";
+                if (dataType.Description != null)
+                {
+                    result = "<p>" + dataType.Description[0].Text + "</p>";
+                }
 
                 result += "<ul>";
                 foreach (EnumerationValue value in dataType.Enumeration)
@@ -159,14 +132,29 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             }
             else
             {
-                if (dataType.Description.ToString() == "[]")
+                if (dataType.Description != null)
                 {
-                    result = "";
+                    if (dataType.Description.ToString() == "[]")
+                    {
+                        result = "";
+                    }
+                    else
+                    {
+                        result = dataType.Description[0].Text;
+                    }
                 }
-                else
-                {
-                    result = dataType.Description[0].Text;
-                }
+            }
+
+            return result;
+        }
+
+        private string GetPropertyClassDescription(PropertyClass propertyClass)
+        {
+            string result = "";
+
+            if(propertyClass.Description.Count > 0)
+            {
+                result = propertyClass.Description[0].Text;
             }
 
             return result;
@@ -197,36 +185,7 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             return result;
         }
 
-        private void InitializeClassDefinitions(DirectoryInfo domainDirectory)
-        {
-            string domainName = domainDirectory.Name;
-
-            FileInfo[] specIfFiles = domainDirectory.GetFiles("*.specif");
-
-            SpecIF.DataModels.SpecIF domainSpecIF = new SpecIF.DataModels.SpecIF();
-
-            int fileConuter = 0;
-
-            foreach (FileInfo fileInfo in specIfFiles)
-            {
-                fileConuter++;
-
-                SpecIF.DataModels.SpecIF specIF = SpecIfFileReaderWriter.ReadDataFromSpecIfFile(fileInfo.FullName);
-
-                domainSpecIF.DataTypes.AddRange(specIF.DataTypes);
-                domainSpecIF.PropertyClasses.AddRange(specIF.PropertyClasses);
-                domainSpecIF.ResourceClasses.AddRange(specIF.ResourceClasses);
-                domainSpecIF.StatementClasses.AddRange(specIF.StatementClasses);
-
-                _metaDataSpecIF.DataTypes.AddRange(specIF.DataTypes);
-                _metaDataSpecIF.PropertyClasses.AddRange(specIF.PropertyClasses);
-                _metaDataSpecIF.ResourceClasses.AddRange(specIF.ResourceClasses);
-                _metaDataSpecIF.StatementClasses.AddRange(specIF.StatementClasses);
-            }
-
-            _domainClasses.Add(domainName, domainSpecIF);
-
-        }
+        
 
 
     }
