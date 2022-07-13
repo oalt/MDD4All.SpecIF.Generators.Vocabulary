@@ -255,7 +255,12 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
 
             if (dataType.Enumeration != null && dataType.Enumeration.Count > 0)
             {
-                result.Content.Add(dataType.Description[0].Text);
+                string description = "";
+                if (dataType.Description != null && dataType.Description.Count > 0)
+                {
+                    description = dataType.Description[0].Text;
+                }
+                result.Content.Add(description);
 
                 foreach (EnumerationValue value in dataType.Enumeration)
                 {
@@ -265,16 +270,23 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
             }
             else
             {
-                if (dataType.Description.ToString() == "[]")
+                if (dataType.Description != null)
                 {
-                    result.Content.Add("");
+                    if (dataType.Description.ToString() == "[]")
+                    {
+                        result.Content.Add("");
+                    }
+                    else
+                    {
+                        if (dataType.Description.Count > 0)
+                        {
+                            result.Content.Add(dataType.Description[0].Text);
+                        }
+                    }
                 }
                 else
                 {
-                    if (dataType.Description.Count > 0)
-                    {
-                        result.Content.Add(dataType.Description[0].Text);
-                    }
+                    result.Content.Add("");
                 }
             }
 
