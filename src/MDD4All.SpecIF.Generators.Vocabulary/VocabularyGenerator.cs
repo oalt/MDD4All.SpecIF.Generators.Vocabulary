@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MDD4All.SpecIF.DataModels.Manipulation;
 
 namespace MDD4All.SpecIF.Generators.Vocabulary
 {
@@ -220,13 +221,13 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
                 Properties = new List<Property>()
             };
 
-            Property nameProperty = new Property(new Key("PC-Name", "1.1"), Value.ToSimpleTextString(propertyClass.Title) + " [Property Class]");
+            Property nameProperty = new Property(new Key("PC-Name", "1.1"), propertyClass.Title + " [Property Class]");
 
             result.Properties.Add(nameProperty);
 
-            string description = GetDescription(Value.ToSimpleTextString(propertyClass.Title),
-                                                        Value.ToSimpleTextString(propertyClass.Description),
-                                                        propertyClass);
+            string description = GetDescription(propertyClass.Title,
+                                                propertyClass.Description.GetDefaultStringValue(),
+                                                propertyClass);
 
             description += "<dt>Data Type</dt>";
 
@@ -249,12 +250,12 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
                 Properties = new List<Property>()
             };
 
-            Property nameProperty = new Property(new Key("PC-Name", "1"), Value.ToSimpleTextString(resourceClass.Title) + " [Resource Class]");
+            Property nameProperty = new Property(new Key("PC-Name", "1.1"), resourceClass.Title + " [Resource Class]");
 
             result.Properties.Add(nameProperty);
 
-            string resourceDescription = GetDescription(Value.ToSimpleTextString(resourceClass.Title),
-                                                        Value.ToSimpleTextString(resourceClass.Description),
+            string resourceDescription = GetDescription(resourceClass.Title,
+                                                        resourceClass.Description.GetDefaultStringValue(),
                                                         resourceClass);
 
             if (resourceClass.PropertyClasses != null && resourceClass.PropertyClasses.Count != 0)
@@ -284,12 +285,12 @@ namespace MDD4All.SpecIF.Generators.Vocabulary
                 Properties = new List<Property>()
             };
 
-            Property nameProperty = new Property(new Key("PC-Name", "1"), Value.ToSimpleTextString(statementClass.Title) + " [Statement Class]");
+            Property nameProperty = new Property(new Key("PC-Name", "1.1"), statementClass.Title + " [Statement Class]");
 
             result.Properties.Add(nameProperty);
 
-            string resourceDescription = GetDescription(Value.ToSimpleTextString(statementClass.Title),
-                                                        Value.ToSimpleTextString(statementClass.Description),
+            string resourceDescription = GetDescription(statementClass.Title,
+                                                        statementClass.Description.GetDefaultStringValue(),
                                                         statementClass);
 
             if (statementClass.PropertyClasses != null && statementClass.PropertyClasses.Count != 0)
